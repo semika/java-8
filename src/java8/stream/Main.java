@@ -6,6 +6,8 @@ package java8.stream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.IntSummaryStatistics;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -13,6 +15,7 @@ import java.util.OptionalInt;
 import java.util.Set;
 import java.util.TooManyListenersException;
 import java.util.TreeSet;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -69,13 +72,19 @@ public class Main {
 		
 		//flatMapTest(menu);
 		
-		mathing(menu);
+		//mathing(menu);
 		
 		//finding(menu);
 		
 		//reduceTest(menu);
 		
 		//numberRange();
+		
+		//groupDishesByType(menu);
+		
+		//partition(menu);
+		
+		primeNumbers(20);
 	}
 	
 	public static void filterHightCalaris(List<Dish> menu) {
@@ -177,10 +186,147 @@ public class Main {
 		
 		menu.stream().map(Dish::getCalaries).reduce(Integer::min).ifPresent(d->System.out.println("Min Calaries " + d)); 
 		
+		Long noOfDishesInMenu = menu.stream().count();
+		
+		//Using collectors
+		
+		noOfDishesInMenu = menu.stream().collect(Collectors.counting()); 
+		Optional<Dish> maxCalariedDish = menu.stream().collect(Collectors.maxBy(Comparator.comparing(Dish::getCalaries)));  
+		
+		maxCalariedDish = menu.stream().collect(Collectors.reducing( (d1, d2) -> d1.getCalaries() > d2.getCalaries() ? d1 : d2));
+		
+		Optional<Dish> minCalariedDish = menu.stream().collect(Collectors.minBy(Comparator.comparing(Dish::getCalaries)));   
+		
+		Integer totoalCalaries = menu.stream().collect(Collectors.summingInt(Dish::getCalaries)); 
+		totoalCalaries = menu.stream().collect(Collectors.reducing(0, Dish::getCalaries, (i, j) -> i + j)); 
+		totoalCalaries = menu.stream().mapToInt(Dish::getCalaries).sum();
+		totoalCalaries = menu.stream().map(Dish::getCalaries).reduce(Integer::sum).get();
+		
+		
+		Double averageCalaries = menu.stream().collect(Collectors.averagingInt(Dish::getCalaries)); 
+		IntSummaryStatistics calarysummary = menu.stream().collect(Collectors.summarizingInt(Dish::getCalaries)); 
+		String dishNames = menu.stream().map(Dish::getName).collect(Collectors.joining(","));  
+		 
+		System.out.println("Number of Dishes in the menu " + noOfDishesInMenu); 
+		System.out.println("Max Calaries " + maxCalariedDish.get().getCalaries()); 
+		System.out.println("Min Calaries " + minCalariedDish.get().getCalaries()); 
+		System.out.println("Totoal Calaries " + totoalCalaries); 
+		System.out.println("Averageing Calaries " + averageCalaries); 
+		System.out.println("Summary " + calarysummary);
+		System.out.println("Dish Names " + dishNames); 
+		
 		//System.out.println(totoalCalries); 
 	}
 	
 	public static void numberRange() {
 		IntStream.rangeClosed(1, 100).filter(n -> n%2 == 0).forEach(System.out::println);  
+	}
+	
+	public static void groupDishesByType(List<Dish> menu) {
+		
+		//grouping by type
+		Map<Dish.Type, List<Dish>> dishOverType = menu.stream().collect(Collectors.groupingBy(Dish::getType)); 
+		//System.out.println(dishOverType);
+		
+		Map<Dish.Type, Long> countByEachType = menu.stream().collect(Collectors.groupingBy(Dish::getType, Collectors.counting()));
+		//System.out.println(countByEachType);  
+		
+		Map<Dish.Type, Dish> maxCalariesByType = menu.stream().collect(Collectors.groupingBy(
+				Dish::getType, Collectors.collectingAndThen(Collectors.maxBy(Comparator.comparingInt(Dish::getCalaries)), Optional::get)));
+		//System.out.println(maxCalariesByType); 
+		
+		Map<Dish.Type, Integer> totalCalriesOverType = menu.stream().collect(Collectors.groupingBy(Dish::getType, Collectors.summingInt(Dish::getCalaries))); 
+		//System.out.println(totalCalriesOverType); 
+		
+		Map<Boolean, List<Dish>> s = menu.stream().collect(Collectors.partitioningBy(d -> d.getCalaries() > 1000));
+		
+		//System.out.println(s); 
+		
+		//grouping by calaric level
+		Map<Dish.CalaricLevel, List<Dish>> dishesOverCalaricLevel = menu.stream().collect(  Collectors.groupingBy( (Dish d) -> { 
+				if (d.getCalaries() <= 400) {
+					return Dish.CalaricLevel.DIET;
+				} else if (d.getCalaries() <= 700) {
+					return Dish.CalaricLevel.NORMAL;
+				} else  
+					return Dish.CalaricLevel.FAT;			 
+				}
+		));  
+		
+		//second level grouping
+		Map<Dish.Type, Map<Dish.CalaricLevel, List<Dish>>> dishesOverCalaricLevel2 = menu.stream().collect(Collectors.groupingBy(Dish::getType,  Collectors.groupingBy( (Dish d) -> {  
+			if (d.getCalaries() <= 400) {
+				return Dish.CalaricLevel.DIET;
+			} else if (d.getCalaries() <= 700) {
+				return Dish.CalaricLevel.NORMAL;
+			} else  
+				return Dish.CalaricLevel.FAT;			 
+			}
+		 )));  
+		
+		Map<Dish.Type, Set<Dish.CalaricLevel>> calaricLevelOverType = menu.stream().collect(Collectors.groupingBy(Dish::getType, Collectors.mapping( (Dish d) -> {
+																										if (d.getCalaries() <= 400) {
+																											return Dish.CalaricLevel.DIET;
+																										} else if (d.getCalaries() <= 700) {
+																											return Dish.CalaricLevel.NORMAL;
+																										} else { 
+																											return Dish.CalaricLevel.FAT;			 
+																										}
+																									}    , Collectors.toSet() ))); 
+		System.out.println(calaricLevelOverType); 
+		
+		//System.out.println(dishesOverCalaricLevel2); 
+		
+	}
+	
+	public static void partition(List<Dish> menu) {
+		
+		Map<Boolean, List<Dish>> dishTypeMap = menu.stream().collect(Collectors.partitioningBy(Dish::getVegitarian));  
+	//	System.out.println(dishTypeMap.get(true)); 
+		
+		List<Dish> vegitatianDish = menu.stream().filter(Dish::getVegitarian).collect(Collectors.toList());  
+	//	System.out.println(vegitatianDish); 
+		
+		List<Dish> nonVegitarianDish = menu.stream().filter(  d -> !d.getVegitarian() ).collect(Collectors.toList()); 
+	//	System.out.println(nonVegitarianDish); 
+		
+		
+		Map<Boolean, Map<Dish.Type, List<Dish>>> x = menu.stream().collect(Collectors.partitioningBy(Dish::getVegitarian, Collectors.groupingBy(Dish::getType)));  
+	//	System.out.print(x); 
+		
+		Map<Boolean, Dish> xx = menu.stream()
+			.collect(Collectors.partitioningBy(Dish::getVegitarian, Collectors.collectingAndThen(Collectors.maxBy(Comparator.comparingInt(Dish::getCalaries)), Optional::get))); 
+		System.out.println(xx); 
+		
+	}
+	
+	public static void primeNumbers(int n) {
+		//IntStream.range(1, n).forEach( i -> );
+		
+		for (int i = 1; i <= n; i++) {
+			boolean isPrime = true;
+			
+			for (int j = 2; j <= i; j++) {
+				if (i != j && i % j == 0) {
+					isPrime = false;
+					break;
+				}
+			}
+			
+			if (isPrime) {
+				//System.out.println(i);
+			}
+		}
+		
+		isPrime(4);
+	}
+	
+	public static void isPrime(int n) {
+		Boolean isPrime = IntStream.range(2, n).noneMatch(i -> n % i == 0);
+		if (isPrime) {
+			System.out.println(n + " is  a prime number");
+		} else {
+			System.out.println(n + " is not a prime number");
+		}
 	}
 }
