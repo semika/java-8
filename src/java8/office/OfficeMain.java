@@ -2,7 +2,12 @@ package java8.office;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.IntSummaryStatistics;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 public class OfficeMain {
 
@@ -13,17 +18,17 @@ public class OfficeMain {
 		Department ops = new Department("OP", 25);
 		Department tech = new Department("Tech", 150);
 		
-		List<Employee> employeeList = Arrays.asList(new  Employee("David", 32, "Matara", account), 
-				new  Employee("Brayan", 25, "Galle", hr),
-				new  Employee("JoAnne", 45, "Negombo", ops),
-				new  Employee("Jake", 65, "Galle", hr),
-				new  Employee("Brent", 55, "Matara", hr),
-				new  Employee("Allice", 23, "Matara", ops),
-				new  Employee("Austin", 30, "Negombo", tech),
-				new  Employee("Gerry", 29, "Matara", tech),
-				new  Employee("Scote", 20, "Negombo", ops),
-				new  Employee("Branden", 32, "Matara", account),
-				new  Employee("Iflias", 31, "Galle", hr)); 
+		List<Employee> employeeList = Arrays.asList(new  Employee("David", 32, "Matara", 2000, "Male", account), 
+				new  Employee("Brayan", 25, "Galle",  3000, "Male",hr),
+				new  Employee("JoAnne", 45, "Negombo",  800, "Female", ops),
+				new  Employee("Jake", 65, "Galle",  2500, "Male", hr),
+				new  Employee("Brent", 55, "Matara",  8000, "Male", hr),
+				new  Employee("Allice", 23, "Matara",  600, "Female", ops),
+				new  Employee("Austin", 30, "Negombo",  9000, "Male", tech),
+				new  Employee("Gerry", 29, "Matara",  2500, "Male", tech),
+				new  Employee("Scote", 20, "Negombo",  2500, "Male", ops),
+				new  Employee("Branden", 32, "Matara",  2500, "Male", account),
+				new  Employee("Iflias", 31, "Galle",  2900, "Female", hr)); 
 		
 		//allMataraEmployees(employeeList);
 		//allDistictDepartmentNames(employeeList);
@@ -31,7 +36,8 @@ public class OfficeMain {
 		//departmentNameCommaSeperated(employeeList);
 		//findAnyEmployeeFromHR(employeeList);
 		//accountDeptEmployees(employeeList);
-		highestAgeEmployee(employeeList);
+		//highestAgeEmployee(employeeList);
+		collecExamples(employeeList);
 		
 	}
 	
@@ -75,6 +81,42 @@ public class OfficeMain {
 		
 		
 		employeeList.stream().map(e -> e.getDepartment().getNoOfEmployees()).distinct().reduce(Integer::sum).ifPresent(System.out::println);  
+	}
+	
+	public static void collecExamples(List<Employee> employeeList) {
+		
+		//combine to list or set
+		List<Employee> employee = employeeList.stream().collect(Collectors.toList());
+		
+		Set<Employee> employeeSet = employeeList.stream().collect(Collectors.toSet());
+		
+		Long totalNumOfEmployees = employeeList.stream().collect(Collectors.counting());
+		
+		System.out.println("Total Number of Employees :" + totalNumOfEmployees); 
+		
+		//Find max salary employee
+		employeeList.stream()
+		            .collect(Collectors.maxBy(Comparator.comparingInt(Employee::getSalary)))
+		            .ifPresent(e -> System.out.println("Max salary employee :" + e.getName()));
+		
+		
+		//Find min Salary employee
+		employeeList.stream()
+		            .collect(Collectors.minBy(Comparator.comparingInt(Employee::getSalary)))
+		            .ifPresent(e -> System.out.println("Min salary employee :" + e.getName())); 
+		
+		//Find total salary of all employees.
+		Integer totalSalary = employeeList.stream().collect(Collectors.summingInt(Employee::getSalary)); 
+		System.out.println("Totoal Salary" + totalSalary); 
+		
+		//Find the average salary of all employees.
+		Double averageSalary = employeeList.stream().collect(Collectors.averagingInt(Employee::getSalary)); 
+		System.out.println("Average Salary" + averageSalary); 
+		
+		//All in one
+		IntSummaryStatistics salalryStat = employeeList.stream().collect(Collectors.summarizingInt(Employee::getSalary)); 
+		System.out.println(salalryStat); 
+		
 	}
 
 }
