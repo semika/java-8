@@ -75,5 +75,10 @@ public class Employee {
 	public void setSex(String sex) {
 		this.sex = sex;
 	}
+
+	@Override
+	public String toString() {
+		return "Employee [name=" + name + "]";
+	}
 	
 }

@@ -80,11 +80,11 @@ public class Main {
 		
 		//numberRange();
 		
-		//groupDishesByType(menu);
+		groupDishesByType(menu);
 		
 		//partition(menu);
 		
-		primeNumbers(20);
+		//primeNumbers(20);
 	}
 	
 	public static void filterHightCalaris(List<Dish> menu) {
@@ -235,6 +235,11 @@ public class Main {
 				Dish::getType, Collectors.collectingAndThen(Collectors.maxBy(Comparator.comparingInt(Dish::getCalaries)), Optional::get)));
 		//System.out.println(maxCalariesByType); 
 		
+		//Max calories for each type
+		Map<Dish.Type, Optional<Dish>> ss = menu.stream().collect(Collectors.groupingBy(Dish::getType, 
+				                                                                        Collectors.maxBy(Comparator.comparingInt(Dish::getCalaries))));   
+		System.out.println(ss); 
+		
 		Map<Dish.Type, Integer> totalCalriesOverType = menu.stream().collect(Collectors.groupingBy(Dish::getType, Collectors.summingInt(Dish::getCalaries))); 
 		//System.out.println(totalCalriesOverType); 
 		
@@ -254,26 +259,31 @@ public class Main {
 		));  
 		
 		//second level grouping
-		Map<Dish.Type, Map<Dish.CalaricLevel, List<Dish>>> dishesOverCalaricLevel2 = menu.stream().collect(Collectors.groupingBy(Dish::getType,  Collectors.groupingBy( (Dish d) -> {  
-			if (d.getCalaries() <= 400) {
-				return Dish.CalaricLevel.DIET;
-			} else if (d.getCalaries() <= 700) {
-				return Dish.CalaricLevel.NORMAL;
-			} else  
-				return Dish.CalaricLevel.FAT;			 
-			}
-		 )));  
+		Map<Dish.Type, Map<Dish.CalaricLevel, List<Dish>>> dishesOverCalaricLevel2 = menu.stream()
+				.collect(Collectors.groupingBy(Dish::getType,  
+						 				Collectors.groupingBy((Dish d) -> {  
+													if (d.getCalaries() <= 400) {
+														return Dish.CalaricLevel.DIET;
+													} else if (d.getCalaries() <= 700) {
+														return Dish.CalaricLevel.NORMAL;
+													} else  
+														return Dish.CalaricLevel.FAT;			 
+													}
+						 						)
+						 			));  
 		
-		Map<Dish.Type, Set<Dish.CalaricLevel>> calaricLevelOverType = menu.stream().collect(Collectors.groupingBy(Dish::getType, Collectors.mapping( (Dish d) -> {
-																										if (d.getCalaries() <= 400) {
-																											return Dish.CalaricLevel.DIET;
-																										} else if (d.getCalaries() <= 700) {
-																											return Dish.CalaricLevel.NORMAL;
-																										} else { 
-																											return Dish.CalaricLevel.FAT;			 
-																										}
-																									}    , Collectors.toSet() ))); 
-		System.out.println(calaricLevelOverType); 
+		Map<Dish.Type, Set<Dish.CalaricLevel>> calaricLevelOverType = menu.stream()
+																		  .collect(Collectors.groupingBy(Dish::getType, 
+																				                         Collectors.mapping( (Dish d) -> {
+																												if (d.getCalaries() <= 400) {
+																													return Dish.CalaricLevel.DIET;
+																												} else if (d.getCalaries() <= 700) {
+																													return Dish.CalaricLevel.NORMAL;
+																												} else { 
+																													return Dish.CalaricLevel.FAT;			 
+																												}
+																				                         	}    , Collectors.toSet()))); 
+		//System.out.println(calaricLevelOverType); 
 		
 		//System.out.println(dishesOverCalaricLevel2); 
 		

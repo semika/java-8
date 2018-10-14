@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.IntSummaryStatistics;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collector;
@@ -37,8 +38,9 @@ public class OfficeMain {
 		//findAnyEmployeeFromHR(employeeList);
 		//accountDeptEmployees(employeeList);
 		//highestAgeEmployee(employeeList);
-		collecExamples(employeeList);
-		
+		//collecExamples(employeeList);
+		//usingReducing(employeeList);
+		usingGroupBy(employeeList);
 	}
 	
 	public static void allMataraEmployees(List<Employee> employeeList) {
@@ -117,6 +119,75 @@ public class OfficeMain {
 		IntSummaryStatistics salalryStat = employeeList.stream().collect(Collectors.summarizingInt(Employee::getSalary)); 
 		System.out.println(salalryStat); 
 		
+		//All employee's names as comma seperated string
+		String employeeNameStrings = employeeList.stream().map(Employee::getName).collect(Collectors.joining(", ")); 
+		System.out.println(employeeNameStrings);
+		
+		 
+	}
+	
+	public static void usingReducing(List<Employee> employeeList) {
+		Integer maxSalary = employeeList.stream().collect(Collectors.reducing(0, Employee::getSalary, Integer::max)); 
+		System.out.println("Max salary " + maxSalary); 
+		
+		Optional<Employee> minSalary = employeeList.stream().collect(Collectors.reducing((e1, e2) -> e1.getSalary() < e2.getSalary() ? e1 :  e2));
+		System.out.println("Min salary " + minSalary.get().getSalary()); 
+		
+		Integer _maxSalary = employeeList.stream().collect(Collectors.reducing(0, Employee::getSalary, Integer::max)); 
+		System.out.println("Max salary " + _maxSalary); 
 	}
 
+	public static void usingGroupBy(List<Employee> employeeList) {
+		
+		//sort employees by department.
+		Map<Department, List<Employee>> employeesOverDepartment = employeeList.stream().collect(Collectors.groupingBy(Employee::getDepartment));
+		
+		//System.out.println(employeesOverDepartment); 
+		
+		//group employees based on salary
+		
+		Map<String, List<Employee>> map = employeeList.stream().collect(
+				Collectors.groupingBy((Employee e) -> { 
+														if (e.getSalary() > 2000) {
+															return "High Salary";
+														} else {
+															return "Low Salary";
+														}
+													  })); 
+		
+		//group employees by department name.
+		
+		Map<String, Map<String, List<Employee>>> employeesByDepartmentName = employeeList.stream().collect(
+				Collectors.groupingBy((Employee e) -> { 
+														return e.getDepartment().getDepartmentName();
+													  }, 
+									   Collectors.groupingBy((Employee e) -> { 
+											return e.getSex();
+									   }) ) ); 
+		
+		//count the number of employees in each department.
+		
+		Map<String, Long> noOfEmployeesInDepartment = employeeList.stream()
+				.collect(Collectors.groupingBy((Employee e) -> { 
+													return e.getDepartment().getDepartmentName();
+												}, 
+												Collectors.counting()));
+		
+		//max salary exmployee in each department
+		
+		Map<String, Employee> maxSalaryEmployeeOfDept =  employeeList.stream()
+				.collect(Collectors.groupingBy((Employee e) -> {return e.getDepartment().getDepartmentName();}, 
+						                       Collectors.collectingAndThen(
+						                    		   Collectors.maxBy(Comparator.comparingInt(Employee::getSalary)), 
+						                    		   Optional::get) ) ); 
+		
+		//total salary for each department
+		
+		Map<String, Integer> totalSalaryOverDepartment = employeeList.stream()
+						.collect(Collectors.groupingBy(
+													(Employee e) -> {return e.getDepartment().getDepartmentName();}, 
+													 Collectors.summingInt(Employee::getSalary)));  
+				
+		System.out.println(totalSalaryOverDepartment);
+	}
 }
