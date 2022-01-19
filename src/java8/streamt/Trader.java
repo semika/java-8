@@ -1,7 +1,7 @@
 /**
  * 
  */
-package java8.stream;
+package java8.streamt;
 
 /**
  * @author semikasiriwardana

@@ -1,10 +1,8 @@
 /**
  * 
  */
-package java8.stream;
+package java8.streamt;
 
-import java.io.PrintStream;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.IntSummaryStatistics;
@@ -13,16 +11,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.Set;
-import java.util.TooManyListenersException;
 import java.util.TreeSet;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-
-import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
-
-import java8.stream.Dish.Type;
 
 /**
  * @author semikasiriwardana
