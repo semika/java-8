@@ -1,6 +1,6 @@
 package java8.sorting;
 
-import java8.streamt.Dish;
+import java8.stream.example.model.Dish;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;

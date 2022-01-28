@@ -1,7 +1,7 @@
 /**
  * 
  */
-package java8.stream.example;
+package java8.stream.example.model;
 
 public class Employee {
 	

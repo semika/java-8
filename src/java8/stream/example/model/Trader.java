@@ -1,7 +1,7 @@
 /**
  * 
  */
-package java8.streamt;
+package java8.stream.example.model;
 
 /**
  * @author semikasiriwardana

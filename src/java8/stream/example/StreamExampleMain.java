@@ -1,5 +1,7 @@
 package java8.stream.example;
 
+import java8.stream.example.model.Department;
+import java8.stream.example.model.Employee;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.IntSummaryStatistics;
@@ -7,19 +9,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class StreamExampleMain {
 
 	public static void main(String[] args) {
 
-		Department account = new Department("Account", 75); 
+		Department account = new Department("Account", 75);
 		Department hr = new Department("HR", 50);
 		Department ops = new Department("OP", 25);
 		Department tech = new Department("Tech", 150);
 		
-		List<Employee> employeeList = Arrays.asList(new  Employee("David", 32, "Matara", 2000, "Male", account), 
+		List<Employee> employeeList = Arrays.asList(new  Employee("David", 32, "Matara", 2000, "Male", account),
 				new  Employee("Brayan", 25, "Galle",  3000, "Male",hr),
 				new  Employee("JoAnne", 45, "Negombo",  800, "Female", ops),
 				new  Employee("Jake", 65, "Galle",  2500, "Male", hr),

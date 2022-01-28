@@ -1,8 +1,9 @@
 /**
  * 
  */
-package java8.streamt;
+package java8.stream.example;
 
+import java8.stream.example.model.Dish;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.IntSummaryStatistics;
