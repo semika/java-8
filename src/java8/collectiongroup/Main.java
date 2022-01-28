@@ -29,7 +29,7 @@ public class Main {
         System.out.print(map);
     }
 
-    private static void groupByTwoFiels(List<BlogPost> posts) {
+    private static void groupByTwoFields(List<BlogPost> posts) {
         Map<Tuple, List<BlogPost>> map = posts.stream().collect(Collectors.groupingBy(post -> new Tuple(post.getType(), post.getAuthor())));
         System.out.println(map);
     }

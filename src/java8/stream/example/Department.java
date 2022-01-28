@@ -1,7 +1,7 @@
 /**
  * 
  */
-package java8.office;
+package java8.stream.example;
 
 /**
  * @author semikasiriwardana

@@ -1,4 +1,4 @@
-package java8.office;
+package java8.stream.example;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -10,7 +10,7 @@ import java.util.Set;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-public class OfficeMain {
+public class StreamExampleMain {
 
 	public static void main(String[] args) {
 
@@ -37,55 +37,103 @@ public class OfficeMain {
 		//departmentNameCommaSeperated(employeeList);
 		//findAnyEmployeeFromHR(employeeList);
 		//accountDeptEmployees(employeeList);
-		//highestAgeEmployee(employeeList);
+		highestAgeEmployee(employeeList);
 		//collecExamples(employeeList);
 		//usingReducing(employeeList);
-		usingGroupBy(employeeList);
+		//usingGroupBy(employeeList);
 	}
-	
+
+	/**
+	 * Filter records by a particular field and also sort them by a particular field.
+	 * @param employeeList
+	 */
 	public static void allMataraEmployees(List<Employee> employeeList) {
 		employeeList.stream()
 					.filter(e -> e.getCity().equalsIgnoreCase("Matara"))
-					.sorted(Comparator.comparing(Employee::getName)).forEach(e -> System.out.println(e.getName()));  
+					.sorted(Comparator.comparing(Employee::getName))
+			.forEach(e -> System.out.println(e.getName()));
 	}
-	
+
+	/**
+	 * Get data through a associated object fields.
+	 * @param employeeList
+	 */
 	public static void allDistictDepartmentNames (List<Employee> employeeList) {
-		employeeList.stream().map(e -> e.getDepartment().getDepartmentName()).distinct().forEach(System.out::println); 
+		employeeList.stream().map(e -> e.getDepartment().getDepartmentName())
+			.distinct()
+			.forEach(System.out::println);
 	}
-	
+
+	/**
+	 * Filter values through a field in a associted object field.
+	 * @param employeeList
+	 */
 	public static void departmentOver50(List<Employee> employeeList) {
-		employeeList.stream().map(Employee::getDepartment).filter(d -> d.getNoOfEmployees() > 50).distinct().forEach(d -> System.out.println(d.getDepartmentName()));
+		employeeList.stream().map(Employee::getDepartment)
+			.filter(d -> d.getNoOfEmployees() > 50).distinct()
+			.forEach(d -> System.out.println(d.getDepartmentName()));
 	}
-	
+
+	/**
+	 * How to use 'reduce()' method to build a comma separated string
+	 * @param employeeList
+	 */
 	public static void departmentNameCommaSeperated(List<Employee> employeeList) {
-		String s = employeeList.stream().map(e -> e.getDepartment().getDepartmentName()).distinct().sorted().reduce("", (a, b) -> (a + "," + b)); 
+		String s = employeeList.stream().map(e -> e.getDepartment().getDepartmentName()).distinct()
+			.sorted().reduce("", (a, b) -> (a + "," + b));
 		System.out.println(s); 
 	}
-	
+
+	/**
+	 * Using anyMatch() method to search over a collection.
+	 * Search for any employee who works for HR department.
+	 * @param employeeList
+	 */
 	public static void findAnyEmployeeFromHR(List<Employee> employeeList) {
-		if (employeeList.stream().anyMatch(e -> e.getDepartment().getDepartmentName().equalsIgnoreCase("HR"))) {
+		Boolean employeeInHrPresent = employeeList.stream().anyMatch(e -> e.getDepartment().getDepartmentName().equalsIgnoreCase("HR"));
+		if (employeeInHrPresent) {
 			System.out.println("Found employees frm HR department"); 
 		}
 	}
-	
+
+	/**
+	 * Using map() method to filter out data by a particular condition.
+	 * Get list of employee names who works for 'Account' department.
+	 * @param employeeList
+	 */
 	public static void accountDeptEmployees(List<Employee> employeeList) {
-		employeeList.stream().filter(e -> e.getDepartment().getDepartmentName().equalsIgnoreCase("Account")).map(Employee::getName).forEach(System.out::println);
+		List<String> employeeNameList = employeeList.stream()
+			.filter(e -> e.getDepartment().getDepartmentName().equalsIgnoreCase("Account"))
+			.map(Employee::getName).collect(Collectors.toList());
+		employeeNameList.forEach(System.out::println);
 	}
 	
 	public static void highestAgeEmployee(List<Employee> employeeList) {
-		//employeeList.stream().map(e -> e.getDepartment().getNoOfEmployees()).reduce(Integer::max).ifPresent(System.out::print);  
-		
+
+		employeeList.stream().map(e -> e.getDepartment().getNoOfEmployees())
+			.reduce(Integer::max)
+			.ifPresent((Integer numOfEmployee) -> System.out.println(numOfEmployee));
+
+		//Get the department having highest number of employees. Option 1
 		employeeList.stream()
 		            .map(Employee::getDepartment)
-		            .reduce( (d1, d2) -> d1.getNoOfEmployees() > d2.getNoOfEmployees() ? d1 : d2).ifPresent(d -> System.out.println(d.getDepartmentName()));  //.map(Department::getDepartmentName).ifPresent(consumer);
-	
-		employeeList.stream().map(Employee::getDepartment).max(Comparator.comparing(Department::getNoOfEmployees)).ifPresent(d -> System.out.println(d.getDepartmentName()));
+		            .reduce((d1, d2) -> d1.getNoOfEmployees() > d2.getNoOfEmployees() ? d1 : d2)
+			.ifPresent(d -> System.out.println(d.getDepartmentName() + " :" + d.getNoOfEmployees()));
+		//.map(Department::getDepartmentName).ifPresent(consumer);
+
+		//Get the department having highest number of employees. Option 2
+		employeeList.stream().map(Employee::getDepartment)
+			.max(Comparator.comparing(Department::getNoOfEmployees))
+			.ifPresent(d -> System.out.println(d.getDepartmentName() + " :" + d.getNoOfEmployees()));
 		
-		
-		employeeList.stream().map(e -> e.getDepartment().getNoOfEmployees()).distinct().reduce(Integer::sum).ifPresent(System.out::println);  
+		// Get the total number of employees of all departments.
+		employeeList.stream().map(e -> e.getDepartment().getNoOfEmployees())
+			.distinct()
+			.reduce(Integer::sum)
+			.ifPresent(System.out::println);
 	}
 	
-	public static void collecExamples(List<Employee> employeeList) {
+	public static void collectExamples(List<Employee> employeeList) {
 		
 		//combine to list or set
 		List<Employee> employee = employeeList.stream().collect(Collectors.toList());
@@ -100,7 +148,6 @@ public class OfficeMain {
 		employeeList.stream()
 		            .collect(Collectors.maxBy(Comparator.comparingInt(Employee::getSalary)))
 		            .ifPresent(e -> System.out.println("Max salary employee :" + e.getName()));
-		
 		
 		//Find min Salary employee
 		employeeList.stream()
@@ -122,8 +169,7 @@ public class OfficeMain {
 		//All employee's names as comma seperated string
 		String employeeNameStrings = employeeList.stream().map(Employee::getName).collect(Collectors.joining(", ")); 
 		System.out.println(employeeNameStrings);
-		
-		 
+
 	}
 	
 	public static void usingReducing(List<Employee> employeeList) {
@@ -145,7 +191,6 @@ public class OfficeMain {
 		//System.out.println(employeesOverDepartment); 
 		
 		//group employees based on salary
-		
 		Map<String, List<Employee>> map = employeeList.stream().collect(
 				Collectors.groupingBy((Employee e) -> { 
 														if (e.getSalary() > 2000) {
@@ -156,7 +201,6 @@ public class OfficeMain {
 													  })); 
 		
 		//group employees by department name.
-		
 		Map<String, Map<String, List<Employee>>> employeesByDepartmentName = employeeList.stream().collect(
 				Collectors.groupingBy((Employee e) -> { 
 														return e.getDepartment().getDepartmentName();
@@ -166,7 +210,6 @@ public class OfficeMain {
 									   }) ) ); 
 		
 		//count the number of employees in each department.
-		
 		Map<String, Long> noOfEmployeesInDepartment = employeeList.stream()
 				.collect(Collectors.groupingBy((Employee e) -> { 
 													return e.getDepartment().getDepartmentName();
@@ -174,7 +217,6 @@ public class OfficeMain {
 												Collectors.counting()));
 		
 		//max salary exmployee in each department
-		
 		Map<String, Employee> maxSalaryEmployeeOfDept =  employeeList.stream()
 				.collect(Collectors.groupingBy((Employee e) -> {return e.getDepartment().getDepartmentName();}, 
 						                       Collectors.collectingAndThen(
@@ -182,7 +224,6 @@ public class OfficeMain {
 						                    		   Optional::get) ) ); 
 		
 		//total salary for each department
-		
 		Map<String, Integer> totalSalaryOverDepartment = employeeList.stream()
 						.collect(Collectors.groupingBy(
 													(Employee e) -> {return e.getDepartment().getDepartmentName();}, 
