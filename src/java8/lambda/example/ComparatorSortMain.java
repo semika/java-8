@@ -1,4 +1,4 @@
-package java8.sorting;
+package java8.lambda.example;
 
 import java8.stream.example.model.Dish;
 import java.util.Arrays;
@@ -6,15 +6,17 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
+/**
+ * How to replace old annonymous class with lambda exprestion.
+ */
 public class ComparatorSortMain {
 
     public static void main(String args[]) {
         List<Dish> menu = getAllDish();
-        Consumer<Dish> consumer = (Dish dish) -> System.out.println(dish.getName());
 
-        int x = 10;
-        //This is annonymous class
+        //This is annonymous class -> legecy comparator
         Comparator<Dish> comparator = new Comparator<Dish>() {
             @Override
             public int compare(Dish o1, Dish o2) {
@@ -23,12 +25,25 @@ public class ComparatorSortMain {
             }
         };
 
+        //This is lambda style comparator
         Comparator<Dish> comparator1 = (Dish o1, Dish o2) -> o1.getName().compareTo(o2.getName());
 
-        //sort the object list
-        Collections.sort(menu, comparator1);
+        // As explicit function declaration
+        Function<Dish, String> getNameFunction1 = (Dish dish) -> {
+            return dish.getName();
+        };
+        Function<Dish, String> getNameFunction2 = (Dish dish) -> dish.getName();
 
-        //print
+        Comparator<Dish> comparator2 = Comparator.comparing(getNameFunction1); // Passing as a function
+
+        Comparator<Dish> comparator3 = Comparator.comparing(Dish::getName); // Passing as method reference
+
+        //sort the object list
+        System.out.println("----------------------------------");
+        Collections.sort(menu, comparator3);
+
+        //print by using a consumer
+        Consumer<Dish> consumer = (Dish dish) -> System.out.println(dish.getName());
         menu.stream().forEach(consumer);
     }
 
