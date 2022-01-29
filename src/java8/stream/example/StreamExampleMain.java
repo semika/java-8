@@ -1,7 +1,7 @@
 package java8.stream.example;
 
-import java8.stream.example.model.Department;
-import java8.stream.example.model.Employee;
+import java8.model.Department;
+import java8.model.Employee;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.IntSummaryStatistics;

@@ -3,6 +3,7 @@
  */
 package java8;
 
+import java8.model.Employee;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -21,7 +22,9 @@ public class EmployeeSort {
 	 */
 	public static void main(String[] args) {
 		//createEmployee(Arrays.asList(34,56,43,56, 56, 56), Arrays.asList("Semika", "Nishan", "Lasantha"), (name, age) -> new Employee(name, age)); 
-		List<Employee> empList = createEmployee(Arrays.asList(34,56,43,56, 56, 56), Arrays.asList("Semika", "Nishan", "Lasantha", "Jim", "Brayan", "Kelly"), Employee::new);
+		List<Employee> empList = createEmployee(
+			Arrays.asList(34,56,43,56, 56, 56),
+			Arrays.asList("Semika", "Nishan", "Lasantha", "Jim", "Brayan", "Kelly"), Employee::new);
 		empList.sort(Comparator.comparing(Employee::getAge).reversed().thenComparing(Employee::getName));
 		
 		for (Employee emp : empList) {

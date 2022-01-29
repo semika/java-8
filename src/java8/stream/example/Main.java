@@ -3,7 +3,9 @@
  */
 package java8.stream.example;
 
-import java8.stream.example.model.Dish;
+import java8.model.CalaryLevel;
+import java8.model.Dish;
+import java8.model.DishType;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.IntSummaryStatistics;
@@ -31,16 +33,16 @@ public class Main {
 		//List<Dish> menu = new ArrayList<Dish>();
 		
 		List<Dish> menu = Arrays.asList(
-				new Dish("pork", false, 800, Dish.Type.MEAT), 
-				new Dish("beef", false, 700, Dish.Type.MEAT), 
-				new Dish("chicken", false, 400, Dish.Type.MEAT),
-				new Dish("french fries", true, 530, Dish.Type.OTHER), 
-				new Dish("rice", true, 350, Dish.Type.OTHER),
-				new Dish("season fruit", true, 120, Dish.Type.OTHER), 
-				new Dish("pizza", true, 550, Dish.Type.OTHER),
-				new Dish("prawns", false, 300, Dish.Type.FISH), 
-				new Dish("salmon", false, 450, Dish.Type.FISH),
-				new Dish("salmon", false, 450, Dish.Type.FISH));
+				new Dish("pork", false, 800, DishType.MEAT),
+				new Dish("beef", false, 700, DishType.MEAT),
+				new Dish("chicken", false, 400, DishType.MEAT),
+				new Dish("french fries", true, 530, DishType.OTHER),
+				new Dish("rice", true, 350, DishType.OTHER),
+				new Dish("season fruit", true, 120, DishType.OTHER),
+				new Dish("pizza", true, 550, DishType.OTHER),
+				new Dish("prawns", false, 300, DishType.FISH),
+				new Dish("salmon", false, 450, DishType.FISH),
+				new Dish("salmon", false, 450, DishType.FISH));
 		
 		//menu.stream().map(Dish::getName).forEach(System.out::println); 
 		
@@ -102,7 +104,7 @@ public class Main {
 	public static void makeVegitarianMenu(List<Dish> menu) {
 		List<Dish> vegitarianDishes = menu.stream().filter(Dish::getVegitarian).collect(Collectors.toList());
 		
-		menu.stream().filter(d -> d.getType() == Dish.Type.MEAT).collect(Collectors.toList()).forEach(System.out :: println); 
+		menu.stream().filter(d -> d.getType() == DishType.MEAT).collect(Collectors.toList()).forEach(System.out :: println);
 		
 		//vegitarianDishes.forEach(d -> System.out.println(d.getName())); 
 		
@@ -146,7 +148,7 @@ public class Main {
 		
 		//Optional<Dish> dishOptional = menu.stream().filter(Dish::getVegitarian).findAny(); 
 		
-		Optional<Dish> dishOptional = menu.stream().filter(d -> d.getType() == Dish.Type.MEAT).findAny(); 
+		Optional<Dish> dishOptional = menu.stream().filter(d -> d.getType() == DishType.MEAT).findAny();
 		if (dishOptional.isPresent()) {
 			System.out.println(dishOptional.get().getName()); 
 		}
@@ -218,22 +220,22 @@ public class Main {
 	public static void groupDishesByType(List<Dish> menu) {
 		
 		//grouping by type
-		Map<Dish.Type, List<Dish>> dishOverType = menu.stream().collect(Collectors.groupingBy(Dish::getType)); 
+		Map<DishType, List<Dish>> dishOverType = menu.stream().collect(Collectors.groupingBy(Dish::getType));
 		//System.out.println(dishOverType);
 		
-		Map<Dish.Type, Long> countByEachType = menu.stream().collect(Collectors.groupingBy(Dish::getType, Collectors.counting()));
+		Map<DishType, Long> countByEachType = menu.stream().collect(Collectors.groupingBy(Dish::getType, Collectors.counting()));
 		//System.out.println(countByEachType);  
 		
-		Map<Dish.Type, Dish> maxCalariesByType = menu.stream().collect(Collectors.groupingBy(
+		Map<DishType, Dish> maxCalariesByType = menu.stream().collect(Collectors.groupingBy(
 				Dish::getType, Collectors.collectingAndThen(Collectors.maxBy(Comparator.comparingInt(Dish::getCalaries)), Optional::get)));
 		//System.out.println(maxCalariesByType); 
 		
 		//Max calories for each type
-		Map<Dish.Type, Optional<Dish>> ss = menu.stream().collect(Collectors.groupingBy(Dish::getType, 
+		Map<DishType, Optional<Dish>> ss = menu.stream().collect(Collectors.groupingBy(Dish::getType,
 				                                                                        Collectors.maxBy(Comparator.comparingInt(Dish::getCalaries))));   
 		System.out.println(ss); 
 		
-		Map<Dish.Type, Integer> totalCalriesOverType = menu.stream().collect(Collectors.groupingBy(Dish::getType, Collectors.summingInt(Dish::getCalaries))); 
+		Map<DishType, Integer> totalCalriesOverType = menu.stream().collect(Collectors.groupingBy(Dish::getType, Collectors.summingInt(Dish::getCalaries)));
 		//System.out.println(totalCalriesOverType); 
 		
 		Map<Boolean, List<Dish>> s = menu.stream().collect(Collectors.partitioningBy(d -> d.getCalaries() > 1000));
@@ -241,39 +243,39 @@ public class Main {
 		//System.out.println(s); 
 		
 		//grouping by calaric level
-		Map<Dish.CalaricLevel, List<Dish>> dishesOverCalaricLevel = menu.stream().collect(  Collectors.groupingBy( (Dish d) -> { 
+		Map<CalaryLevel, List<Dish>> dishesOverCalaricLevel = menu.stream().collect(  Collectors.groupingBy( (Dish d) -> {
 				if (d.getCalaries() <= 400) {
-					return Dish.CalaricLevel.DIET;
+					return CalaryLevel.DIET;
 				} else if (d.getCalaries() <= 700) {
-					return Dish.CalaricLevel.NORMAL;
+					return CalaryLevel.NORMAL;
 				} else  
-					return Dish.CalaricLevel.FAT;			 
+					return CalaryLevel.FAT;
 				}
 		));  
 		
 		//second level grouping
-		Map<Dish.Type, Map<Dish.CalaricLevel, List<Dish>>> dishesOverCalaricLevel2 = menu.stream()
+		Map<DishType, Map<CalaryLevel, List<Dish>>> dishesOverCalaricLevel2 = menu.stream()
 				.collect(Collectors.groupingBy(Dish::getType,  
 						 				Collectors.groupingBy((Dish d) -> {  
 													if (d.getCalaries() <= 400) {
-														return Dish.CalaricLevel.DIET;
+														return CalaryLevel.DIET;
 													} else if (d.getCalaries() <= 700) {
-														return Dish.CalaricLevel.NORMAL;
+														return CalaryLevel.NORMAL;
 													} else  
-														return Dish.CalaricLevel.FAT;			 
+														return CalaryLevel.FAT;
 													}
 						 						)
 						 			));  
 		
-		Map<Dish.Type, Set<Dish.CalaricLevel>> calaricLevelOverType = menu.stream()
+		Map<DishType, Set<CalaryLevel>> calaricLevelOverType = menu.stream()
 																		  .collect(Collectors.groupingBy(Dish::getType, 
 																				                         Collectors.mapping( (Dish d) -> {
 																												if (d.getCalaries() <= 400) {
-																													return Dish.CalaricLevel.DIET;
+																													return CalaryLevel.DIET;
 																												} else if (d.getCalaries() <= 700) {
-																													return Dish.CalaricLevel.NORMAL;
+																													return CalaryLevel.NORMAL;
 																												} else { 
-																													return Dish.CalaricLevel.FAT;			 
+																													return CalaryLevel.FAT;
 																												}
 																				                         	}    , Collectors.toSet()))); 
 		//System.out.println(calaricLevelOverType); 
@@ -294,7 +296,7 @@ public class Main {
 	//	System.out.println(nonVegitarianDish); 
 		
 		
-		Map<Boolean, Map<Dish.Type, List<Dish>>> x = menu.stream().collect(Collectors.partitioningBy(Dish::getVegitarian, Collectors.groupingBy(Dish::getType)));  
+		Map<Boolean, Map<DishType, List<Dish>>> x = menu.stream().collect(Collectors.partitioningBy(Dish::getVegitarian, Collectors.groupingBy(Dish::getType)));
 	//	System.out.print(x); 
 		
 		Map<Boolean, Dish> xx = menu.stream()

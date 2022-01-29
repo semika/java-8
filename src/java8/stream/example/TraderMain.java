@@ -3,8 +3,8 @@
  */
 package java8.stream.example;
 
-import java8.stream.example.model.Trader;
-import java8.stream.example.model.Transaction;
+import java8.model.Trader;
+import java8.model.Transaction;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;

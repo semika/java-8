@@ -3,6 +3,10 @@
  */
 package java8;
 
+import java8.model.Apple;
+import java8.model.Circle;
+import java8.model.Shape;
+import java8.model.Square;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

@@ -1,6 +1,7 @@
 package java8.lambda.example;
 
-import java8.stream.example.model.Dish;
+import java8.model.Dish;
+import java8.model.DishType;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -32,6 +33,7 @@ public class ComparatorSortMain {
         Function<Dish, String> getNameFunction1 = (Dish dish) -> {
             return dish.getName();
         };
+
         Function<Dish, String> getNameFunction2 = (Dish dish) -> dish.getName();
 
         Comparator<Dish> comparator2 = Comparator.comparing(getNameFunction1); // Passing as a function
@@ -50,16 +52,16 @@ public class ComparatorSortMain {
 
     private static List<Dish> getAllDish() {
         List<Dish> menu = Arrays.asList(
-            new Dish("pork", false, 800, Dish.Type.MEAT),
-            new Dish("beef", false, 700, Dish.Type.MEAT),
-            new Dish("chicken", false, 400, Dish.Type.MEAT),
-            new Dish("french fries", true, 530, Dish.Type.OTHER),
-            new Dish("rice", true, 350, Dish.Type.OTHER),
-            new Dish("season fruit", true, 120, Dish.Type.OTHER),
-            new Dish("pizza", true, 550, Dish.Type.OTHER),
-            new Dish("prawns", false, 300, Dish.Type.FISH),
-            new Dish("salmon", false, 450, Dish.Type.FISH),
-            new Dish("salmon", false, 450, Dish.Type.FISH));
+            new Dish("pork", false, 800, DishType.MEAT),
+            new Dish("beef", false, 700, DishType.MEAT),
+            new Dish("chicken", false, 400, DishType.MEAT),
+            new Dish("french fries", true, 530, DishType.OTHER),
+            new Dish("rice", true, 350, DishType.OTHER),
+            new Dish("season fruit", true, 120, DishType.OTHER),
+            new Dish("pizza", true, 550, DishType.OTHER),
+            new Dish("prawns", false, 300, DishType.FISH),
+            new Dish("salmon", false, 450, DishType.FISH),
+            new Dish("salmon", false, 450, DishType.FISH));
         return menu;
     }
 }
