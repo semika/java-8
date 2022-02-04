@@ -3,34 +3,26 @@
  */
 package java8.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 /**
  * @author semikasiriwardana
  *
  */
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Square implements Shape {
 
 	private Integer size;
 	
-	public Square() {
-		super();
-	}
-
-	public Square(Integer size) {
-		super();
-		this.size = size;
-	}
-
-	public Integer getSize() {
-		return size;
-	}
-
-	public void setSize(Integer size) {
-		this.size = size;
-	}
-
 	@Override
 	public Integer area() {
-		return null;
+		return this.size * this.size;
 	}
 	
 }

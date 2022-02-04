@@ -1,4 +1,4 @@
-package java8.collectiongroup;
+package java8.model;
 
 public enum BlogPostType {
     NEWS,

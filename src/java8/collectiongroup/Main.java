@@ -1,9 +1,13 @@
 package java8.collectiongroup;
 
+import java8.model.BlogPost;
+import java8.model.BlogPostType;
+import java8.model.Tuple;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Main {
@@ -25,6 +29,13 @@ public class Main {
     }
 
     private static void groupByBlogPostType(List<BlogPost> posts) {
+
+        Function<BlogPost, BlogPostType> blogPostFunction = (BlogPost blogPost) -> { return blogPost.getType();};
+
+        Function<BlogPost, BlogPostType> blogPostFunction1 = (BlogPost blogPost) -> blogPost.getType();
+
+        Function<BlogPost, BlogPostType> blogPostFunction2 = BlogPost::getType;
+
         Map<BlogPostType, List<BlogPost>> map = posts.stream().collect(Collectors.groupingBy(BlogPost::getType));
         System.out.print(map);
     }

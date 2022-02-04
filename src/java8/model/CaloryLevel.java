@@ -1,6 +1,6 @@
 package java8.model;
 
-public enum CalaryLevel {
+public enum CaloryLevel {
     DIET,
     NORMAL,
     FAT;

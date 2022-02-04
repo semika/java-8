@@ -25,4 +25,13 @@ public class Dish {
 	private Integer calaries;
 	private DishType type;
 
+	public CaloryLevel getCaloryLevel() {
+		if (this.getCalaries() <= 400) {
+			return CaloryLevel.DIET;
+		} else if (this.getCalaries() <= 700) {
+			return CaloryLevel.NORMAL;
+		} else {
+			return CaloryLevel.FAT;
+		}
+	}
 }
