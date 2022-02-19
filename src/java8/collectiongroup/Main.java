@@ -26,6 +26,7 @@ public class Main {
         //groupByBlogPostType(posts);
         //groupByTwoFiels(posts);
         groupIntoSet(posts);
+        String s = "";
     }
 
     private static void groupByBlogPostType(List<BlogPost> posts) {
