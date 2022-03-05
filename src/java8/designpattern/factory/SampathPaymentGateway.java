@@ -2,8 +2,15 @@ package java8.designpattern.factory;
 
 public class SampathPaymentGateway implements PaymentGateway {
 
+    private CardType cardType;
+
     public SampathPaymentGateway() {
-        System.out.print("Creating instance of SampathPaymentGateway....");
+        System.out.println("Creating instance of SampathPaymentGateway....");
+    }
+
+    public SampathPaymentGateway(CardType cardType) {
+        this.cardType = cardType;
+        System.out.println("Creating instance of SampathPaymentGateway....");
     }
 
     @Override
