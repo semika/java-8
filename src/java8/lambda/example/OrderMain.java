@@ -5,8 +5,6 @@ import java8.model.Notifier;
 import java8.model.Order;
 import java.util.function.Function;
 
-import com.sun.tools.corba.se.idl.constExpr.Or;
-
 public class OrderMain {
 
     public static void main(String args[]) {
@@ -18,6 +16,7 @@ public class OrderMain {
         Order order = new Order();
         //Assume we have the customer object
         Customer customer = new Customer();
+        customer.setNotificationPreference("SMS");
 
         Notifier notifier = null;
         if (customer.getNotificationPreference().equals("SMS")) {

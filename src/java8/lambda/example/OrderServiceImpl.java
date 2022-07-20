@@ -8,6 +8,6 @@ public class OrderServiceImpl implements OrderService {
     public void placeOrder(Order order, Notifier notifier) {
         //code to place the order
         //send the notificaiton
-        notifier.notify();
+        notifier.notifyCustomer(order);
     }
 }

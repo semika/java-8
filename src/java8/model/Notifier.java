@@ -2,5 +2,5 @@ package java8.model;
 
 @FunctionalInterface
 public interface Notifier {
-    void notify(Order order);
+    void notifyCustomer(Order order);
 }
